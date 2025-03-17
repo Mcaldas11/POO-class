@@ -11,7 +11,7 @@ function showTabuada(num) {
     }
 }
 
-alert(showTabuada(num));
+console.log(showTabuada(num));
 
 
     
