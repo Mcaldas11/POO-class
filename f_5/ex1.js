@@ -40,25 +40,18 @@ form.addEventListener('submit', event => {
     form.reset()
 })
 
-function detalhesLinha(botao) {
-    const linha = botao.parentElement.parentElement;
-    const nome = linha.children[0].innerText;
-    const ano = parseInt(linha.children[1].innerText); 
-    const genero = linha.children[2].innerText;
+function detalhesLinha(botao){
+    const linha = botao.parentElement.parentElement
+    const nome = linha.children[0].innerText
+    const ano = linha.children[1].innerText
+    const genero = linha.children[2].innerText
 
-    const jogo = jogos.find(jogo => jogo.nome === nome && jogo.ano === ano && jogo.genero === genero);
-
-    if (jogo) {
-        alert(
-            `Detalhes do Jogo:\n` +
-            `Nome: ${jogo.nome}\n` +
-            `Ano: ${jogo.ano}\n` +
-            `Género: ${jogo.genero}\n` +
-            `Plataformas: ${jogo.plataformas.join(', ')}\n` +
-            `Avaliação: ${jogo.avaliacao}`
-        );
-    } else {
-        alert("Jogo não encontrado");
+    const jogo =jogos.find(jogo => jogo.nome===nome && jogo.ano===ano && jogo.genero===genero)
+    if(jogo){
+        alert(jogo.nome + "\n" + jogo.ano + "\n" + jogo.genero )
+    }
+    else{
+        alert("Jogo não encontrado")
     }
 }
 
