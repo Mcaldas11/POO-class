@@ -11,10 +11,6 @@ form.addEventListener("submit", function (event) {
     const dateInput = document.getElementById("txtData").value;
     const status = document.getElementById("idStatus").value;
 
-    if (!title || !description || !dateInput || status === "Select an option") {
-        alert("Todos os campos são obrigatórios!");
-        return;
-    }
 
     const taskDate = new Date(dateInput);
     const now = new Date();
@@ -86,7 +82,7 @@ function getStatusColor(status, date) {
         case "ToDo List": return "lightgreen";
         case "In Progress": return "lightblue";
         case "In Review": return "khaki";
-        case "Done": return "lightgray";
+        case "Done": return "green";
         default: return "white";
     }
 }
