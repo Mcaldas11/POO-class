@@ -67,7 +67,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
         grid.appendChild(card);
     }
-
+    
 });
-
-
