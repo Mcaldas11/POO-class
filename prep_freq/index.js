@@ -1,6 +1,6 @@
 let info = [];
 
-// Função para calcular o IMC
+
 function calcularIMC(peso, altura) {
     return peso / (altura * altura);
 }
