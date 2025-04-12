@@ -1,71 +1,113 @@
+const form = document.getElementById("idForm");
+const taskGrid = document.getElementById("grid");
 
-document.addEventListener("DOMContentLoaded", function () {
-    let tasks = []; // array onde vamos guardar as tarefas
+let tasks = [];
 
-    let form = document.getElementById("idForm");
+form.addEventListener("submit", function (event) {
+    event.preventDefault();
 
-    form.addEventListener("submit", function (e) {
-        e.preventDefault(); 
+    const title = document.getElementById("txtActivity").value.trim();
+    const description = document.getElementById("txtDescription").value.trim();
+    const dateInput = document.getElementById("txtData").value;
+    const status = document.getElementById("idStatus").value;
 
-        let activity = document.getElementById("txtActivity").value.trim();
-        let description = document.getElementById("txtDescription").value.trim();
-        let date = document.getElementById("txtData").value;
-        let status = document.getElementById("idStatus").value;
+    if (!title || !description || !dateInput || status === "Select an option") {
+        alert("Todos os campos são obrigatórios!");
+        return;
+    }
 
-        // Validação: todos os campos obrigatórios
-        if (!activity || !description || !date || status === "Select an option") {
-            alert(" Todos os campos são obrigatórios!");
-            return;
-        }
+    const taskDate = new Date(dateInput);
+    const now = new Date();
 
-        // Validação: data atual ou futura
-        let now = new Date();
-        let inputDate = new Date(date);
+    if (taskDate < now.setHours(0, 0, 0, 0)) {
+        alert("A data tem de ser igual ou posterior à data atual.");
+        return;
+    }
 
-        if (inputDate < now) {
-            alert(" A data deve ser igual ou posterior à atual.");
-            return;
-        }
+    const exists = tasks.some(task =>
+        task.title === title && task.description === description && task.date === dateInput && task.status === status
+    );
 
-        let exists = tasks.some(task =>
-            task.activity === activity &&
-            task.date === date &&
-            task.status === status
-        );
+    if (exists) {
+        alert("Essa tarefa já existe!");
+        return;
+    }
 
-        if (exists) {
-            alert("Já existe uma tarefa com os mesmos dados.");
-            return;
-        }
+    const task = {
+        title,
+        description,
+        date: dateInput,
+        status
+    };
 
-        let task = {
-            activity,
-            description,
-            date,
-            status
-        };
+    tasks.push(task);
+    renderTasks();
+    form.reset();
+});
 
-        tasks.push(task);
+function renderTasks(filterStatus = null) {
+    taskGrid.innerHTML = ""; // Limpa o conteúdo antes de renderizar
 
-        createCard(task);
+    let filteredTasks = [...tasks];
 
-        form.reset();
-    });
+    if (filterStatus) {
+        filteredTasks = filteredTasks.filter(task => task.status === filterStatus);
+    }
 
-    function createCard(task) {
-        let grid = document.getElementById("grid");
+    // Ordenar por data (mais antigo primeiro)
+    filteredTasks.sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        let card = document.createElement("div");
-        card.className = "card mt-3 p-3";
+    filteredTasks.forEach(task => {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.style.backgroundColor = getStatusColor(task.status, task.date);
 
         card.innerHTML = `
-            <h3>${task.activity}</h3>
-            <p><strong>Descrição:</strong> ${task.description}</p>
-            <p><strong>Data:</strong> ${task.date}</p>
-            <p><strong>Status:</strong> ${task.status}</p>
+            <h3>${task.title}</h3>
+            <p>${task.description}</p>
+            <p>${new Date(task.date).toLocaleString()}</p>
+            <p>${task.status}</p>
+            <button class="btn btn-danger btn-sm" onclick="deleteTask('${task.title}', '${task.date}')">X</button>
         `;
 
-        grid.appendChild(card);
+        taskGrid.appendChild(card);
+    });
+}
+
+function getStatusColor(status, date) {
+    const taskDate = new Date(date);
+    const now = new Date();
+
+    if (taskDate < now && status === "Done") {
+        return "red"; // Vermelho se a tarefa estiver com data no passado e status "Done"
     }
-    
+
+    switch (status) {
+        case "ToDo List": return "lightgreen";
+        case "In Progress": return "lightblue";
+        case "In Review": return "khaki";
+        case "Done": return "lightgray";
+        default: return "white";
+    }
+}
+
+window.deleteTask = function (title, date) {
+    tasks = tasks.filter(task => !(task.title === title && task.date === date));
+    renderTasks();
+}
+
+// Filtro por status
+const statusFilter = document.createElement("select");
+statusFilter.innerHTML = `
+    <option value="">Todos</option>
+    <option value="ToDo List">ToDo List</option>
+    <option value="In Progress">In Progress</option>
+    <option value="In Review">In Review</option>
+    <option value="Done">Done</option>
+`;
+statusFilter.classList.add("form-control", "my-2", "w-25", "mx-auto");
+statusFilter.addEventListener("change", () => {
+    renderTasks(statusFilter.value);
 });
+
+document.body.insertBefore(statusFilter, taskGrid);
