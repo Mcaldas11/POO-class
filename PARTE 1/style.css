@@ -1,0 +1,49 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  background-color: #fef8e7;
+}
+
+.jumbotron {
+  background-color: #c2a66c;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  color: #111;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(4, 100px);
+  grid-template-rows: repeat(3, 100px);
+  gap: 10px;
+  justify-content: center;
+}
+
+.board div {
+  width: 100px;
+  height: 100px;
+  background-image: url('img/DiscoverEggs.png');
+  background-size: cover;
+  cursor: pointer;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  font-size: 1.2em;
+}
